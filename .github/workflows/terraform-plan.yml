@@ -1,0 +1,34 @@
+
+name: Plan AI Infrastructure
+
+on:
+  workflow_dispatch:
+    inputs:
+      stack:
+        description: "Select Terraform Stack"
+        required: true
+        type: choice
+        options:
+          - network
+          - eks
+          - data
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  plan:
+    if: github.ref == 'refs/heads/main'
+
+    uses: YOUR_ORG/platform-github-workflows/.github/workflows/terraform-plan.yml@PINNED_SHA
+
+    with:
+      working_directory: stacks/prod/${{ inputs.stack }}
+      terraform_version: "1.14.0"
+      aws_region: ap-south-1
+
+      state_bucket: ${{ vars.TF_STATE_BUCKET }}
+      state_key: ai/prod/${{ inputs.stack }}/terraform.tfstate
+
+      plan_role_arn: ${{ vars.TF_PLAN_ROLE_ARN }}

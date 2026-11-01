@@ -1,0 +1,22 @@
+
+name: Check Terraform Code
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    uses: YOUR_ORG/platform-github-workflows/.github/workflows/terraform-validate.yml@PINNED_SHA
+    with:
+      working_directory: stacks/prod/eks
+      terraform_version: "1.14.0"
+
+  security:
+    uses: YOUR_ORG/platform-github-workflows/.github/workflows/terraform-security.yml@PINNED_SHA
+    with:
+      working_directory: stacks/prod/eks
